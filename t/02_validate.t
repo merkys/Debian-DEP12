@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Debian::DEP12;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 my $entry;
 my $warning;
@@ -30,6 +30,16 @@ is( $warning, 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' doe
 $entry = Debian::DEP12->new( <<END );
 Reference:
   DOI: search for my surname and year
+END
+
+$entry->validate;
+
+is( $warning, 'doi: value \'search for my surname and year\' does not look like valid DOI' );
+
+$entry = Debian::DEP12->new( <<END );
+Reference:
+ - Year: 2021
+ - DOI: search for my surname and year
 END
 
 $entry->validate;
