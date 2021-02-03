@@ -35,8 +35,13 @@ sub _to_BibTeX
 {
     my( $self ) = @_;
 
+    my $reference = $self->{Reference};
+    if( ref $reference eq 'HASH' ) {
+        $reference = [ $reference ];
+    }
+
     my @BibTeX;
-    for my $reference (@{$self->{Reference}}) {
+    for my $reference (@$reference) {
         push @BibTeX,
              { map { lc( $_ ) => $reference->{$_} } keys %$reference };
     }
