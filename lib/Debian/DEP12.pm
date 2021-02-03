@@ -8,6 +8,28 @@ use warnings;
 
 use Data::Validate::URI qw( is_uri );
 use Text::BibTeX::Validate qw( validate_BibTeX );
+use YAML::XS;
+
+$YAML::XS::LoadBlessed = 0;
+
+sub new
+{
+    my( $class, $what ) = @_;
+
+    my $self;
+    if( ref $what eq '' ) {
+        # Text in YAML format
+        if( $YAML::XS::VERSION < 0.69 ) {
+            die 'YAML::XS < 0.69 is insecure' . "\n";
+        }
+
+        $self = Load $what;
+    } else {
+        die 'can only create Debian::DEP12 from text' . "\n";
+    }
+
+    return bless $self, $class;
+}
 
 sub _to_BibTeX
 {
