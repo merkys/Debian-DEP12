@@ -31,11 +31,39 @@ sub new
     return bless $self, $class;
 }
 
+sub fields
+{
+    return keys %{$_[0]};
+}
+
+sub get
+{
+    my( $self, $field ) = @_;
+    return $self->{$field};
+}
+
+sub set
+{
+    my( $self, $field, $value ) = @_;
+    ( my $old_value, $self->{$field} ) = ( $self->{$field}, $value );
+    return $old_value;
+}
+
+sub delete
+{
+    my( $self, $field ) = @_;
+
+    my $old_value = $self->{$field};
+    delete $self->{$field};
+
+    return $old_value;
+}
+
 sub _to_BibTeX
 {
     my( $self ) = @_;
 
-    my $reference = $self->{Reference};
+    my $reference = $self->get( 'Reference' );
     if( ref $reference eq 'HASH' ) {
         $reference = [ $reference ];
     }
@@ -58,11 +86,11 @@ sub validate
                  'Donation', 'FAQ', 'Gallery', 'Other-References',
                  'Registration', 'Repository', 'Repository-Browse',
                  'Webservice') {
-        next if !exists $self->{$key};
-        next if defined is_uri $self->{$key};
+        next if !defined $self->get( $key );
+        next if  defined is_uri $self->get( $key );
         warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
                      $key,
-                     $self->{$key};
+                     $self->get( $key );
     }
 
     for my $BibTeX ($self->_to_BibTeX) {
