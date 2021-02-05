@@ -3,7 +3,7 @@ package Debian::DEP12;
 use strict;
 use warnings;
 
-# ABSTRACT: validator for DEP 12 format
+# ABSTRACT: interface to Debian DEP 12 format
 # VERSION
 
 use Data::Validate::URI qw( is_uri );
@@ -17,7 +17,9 @@ sub new
     my( $class, $what ) = @_;
 
     my $self;
-    if( ref $what eq '' ) {
+    if( !defined $what ) {
+        $self = {};
+    } elsif( ref $what eq '' ) {
         # Text in YAML format
         if( $YAML::XS::VERSION < 0.69 ) {
             die 'YAML::XS < 0.69 is insecure' . "\n";
@@ -101,3 +103,36 @@ sub validate
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Debian::DEP12 - interface to Debian DEP 12 format
+
+=head1 SYNOPSIS
+
+    use Debian::DEP12;
+
+    my $meta = Debian::DEP12->new;
+    $meta->set( 'Bug-Database',
+                'https://github.com/merkys/Debian-DEP12/issues' );
+
+    $meta->validate;
+
+=head1 DESCRIPTION
+
+TODO
+
+=head1 SEE ALSO
+
+For the description of DEP12 refer to
+L<https://dep-team.pages.debian.net/deps/dep12/>.
+
+=head1 AUTHORS
+
+Andrius Merkys, E<lt>merkys@cpan.orgE<gt>
+
+=cut
