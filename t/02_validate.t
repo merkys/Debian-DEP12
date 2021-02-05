@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Debian::DEP12;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 my $entry;
 my $warning;
@@ -15,6 +15,7 @@ Bug-Database: https://github.com/merkys/Debian-DEP12/issues
 Bug-Submit: https://github.com/merkys/Debian-DEP12/issues
 END
 
+$warning = undef;
 $entry->validate;
 
 is( $warning, undef );
@@ -23,6 +24,15 @@ $entry = Debian::DEP12->new( <<END );
 Bug-Database: github.com/merkys/Debian-DEP12/issues
 END
 
+$warning = undef;
+$entry->validate;
+
+is( $warning, 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' does not look like valid URL' );
+
+$entry = Debian::DEP12->new;
+$entry->set( 'Bug-Database', 'github.com/merkys/Debian-DEP12/issues' );
+
+$warning = undef;
 $entry->validate;
 
 is( $warning, 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' does not look like valid URL' );
@@ -32,6 +42,7 @@ Reference:
   DOI: search for my surname and year
 END
 
+$warning = undef;
 $entry->validate;
 
 is( $warning, 'doi: value \'search for my surname and year\' does not look like valid DOI' );
@@ -42,6 +53,7 @@ Reference:
  - DOI: search for my surname and year
 END
 
+$warning = undef;
 $entry->validate;
 
 is( $warning, 'doi: value \'search for my surname and year\' does not look like valid DOI' );
