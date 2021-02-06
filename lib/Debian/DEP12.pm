@@ -43,6 +43,12 @@ sub new
             push @references,
                  { map { _canonical_BibTeX_key( $_ ) => $entry->get( $_ ) }
                        $entry->fieldlist };
+
+            for ('number', 'pages', 'volume', 'year') {
+                next if $references[-1]->{ucfirst $_} !~ /^[1-9][0-9]*$/;
+                $references[-1]->{ucfirst $_} =
+                    int $references[-1]->{ucfirst $_};
+            }
         }
 
         return $class->new( { Reference => \@references } );

@@ -40,11 +40,11 @@ Reference:
   DOI: 10.1107/S1600576715022396
   Journal: Journal of Applied Crystallography
   Month: Feb
-  Number: '1'
+  Number: 1
   Pages: 292--301
   Title: '{\it COD::CIF::Parser}: an error-correcting {CIF} parser for the {P}erl
     language'
   URL: http://dx.doi.org/10.1107/S1600576715022396
-  Volume: '49'
-  Year: '2016'
+  Volume: 49
+  Year: 2016
 END
