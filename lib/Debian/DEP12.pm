@@ -7,6 +7,7 @@ use warnings;
 # VERSION
 
 use Data::Validate::URI qw( is_uri );
+use Scalar::Util qw( blessed );
 use Text::BibTeX::Validate qw( validate_BibTeX );
 use YAML::XS;
 
@@ -22,6 +23,28 @@ sub new
     my $self;
     if( !defined $what ) {
         $self = {};
+    } elsif( blessed $what &&
+             ( $what->isa( 'Text::BibTeX::Entry::' ) ||
+               $what->isa( 'Text::BibTeX::File::' ) ) ) {
+
+        my @entries;
+        if( $what->isa( 'Text::BibTeX::Entry::' ) ) {
+            push @entries, $what;
+        } else {
+            require Text::BibTeX::Entry;
+            while( my $entry = Text::BibTeX::Entry->new( $what ) ) {
+                push @entries, $entry;
+            }
+        }
+
+        my @references;
+        for my $entry (@entries) {
+            # FIXME: Filter only supported keys (?)
+            push @references,
+                 { map { ucfirst( $_ ) => $what->get( $_ ) }
+                       $what->fieldlist };
+        }
+        return $class->new( { Reference => \@references } );
     } elsif( ref $what eq '' ) {
         # Text in YAML format
         if( $YAML::XS::VERSION < 0.69 ) {
