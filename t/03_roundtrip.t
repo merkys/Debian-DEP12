@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
-use Debian::DEP12;
 
+use Debian::DEP12;
 use Test::More tests => 1;
 
 my $entry;
