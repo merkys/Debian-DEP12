@@ -24,11 +24,11 @@ sub new
     if( !defined $what ) {
         $self = {};
     } elsif( blessed $what &&
-             ( $what->isa( 'Text::BibTeX::Entry::' ) ||
-               $what->isa( 'Text::BibTeX::File::' ) ) ) {
+             ( $what->isa( 'Text::BibTeX::Entry' ) ||
+               $what->isa( 'Text::BibTeX::File' ) ) ) {
 
         my @entries;
-        if( $what->isa( 'Text::BibTeX::Entry::' ) ) {
+        if( $what->isa( 'Text::BibTeX::Entry' ) ) {
             push @entries, $what;
         } else {
             require Text::BibTeX::Entry;
@@ -41,7 +41,7 @@ sub new
         for my $entry (@entries) {
             # FIXME: Filter only supported keys (?)
             push @references,
-                 { map { ucfirst( $_ ) => $what->get( $_ ) }
+                 { map { _canonical_BibTeX_key( $_ ) => $what->get( $_ ) }
                        $what->fieldlist };
         }
         return $class->new( { Reference => \@references } );
@@ -59,6 +59,13 @@ sub new
     }
 
     return bless $self, $class;
+}
+
+sub _canonical_BibTeX_key
+{
+    my( $key ) = @_;
+    return uc $key if $key =~ /^(doi|isbn|issn|pmid|url)$/;
+    return ucfirst $key;
 }
 
 sub fields
