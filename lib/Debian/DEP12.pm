@@ -41,9 +41,10 @@ sub new
         for my $entry (@entries) {
             # FIXME: Filter only supported keys (?)
             push @references,
-                 { map { _canonical_BibTeX_key( $_ ) => $what->get( $_ ) }
-                       $what->fieldlist };
+                 { map { _canonical_BibTeX_key( $_ ) => $entry->get( $_ ) }
+                       $entry->fieldlist };
         }
+
         return $class->new( { Reference => \@references } );
     } elsif( ref $what eq '' ) {
         # Text in YAML format
