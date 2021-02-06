@@ -45,6 +45,7 @@ sub new
                        $entry->fieldlist };
 
             for ('number', 'pages', 'volume', 'year') {
+                next if !exists $references[-1]->{ucfirst $_};
                 next if $references[-1]->{ucfirst $_} !~ /^[1-9][0-9]*$/;
                 $references[-1]->{ucfirst $_} =
                     int $references[-1]->{ucfirst $_};
