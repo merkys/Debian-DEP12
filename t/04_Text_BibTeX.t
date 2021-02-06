@@ -3,10 +3,14 @@
 use strict;
 use warnings;
 
+use Test::More;
+
+eval 'use Text::BibTeX';
+plan skip_all => 'Text::BibTeX required' if $@;
+plan tests => 1;
+
 use File::Temp;
 use Debian::DEP12;
-use Test::More tests => 1;
-use Text::BibTeX;
 
 my $tmp = File::Temp->new();
 my $fh;
