@@ -63,7 +63,7 @@ sub new
     } elsif( ref $what eq 'HASH' ) {
         $self = $what;
     } else {
-        die 'can only create Debian::DEP12 from text or hash ref' . "\n";
+        die 'cannot create Debian::DEP12 from ' . ref( $what ) . "\n";
     }
 
     return bless $self, $class;
