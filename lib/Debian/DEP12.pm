@@ -10,7 +10,10 @@ use Data::Validate::URI qw( is_uri );
 use Text::BibTeX::Validate qw( validate_BibTeX );
 use YAML::XS;
 
+# Preventing YAML::XS from doing undesired things:
+$YAML::XS::DumpCode = 0;
 $YAML::XS::LoadBlessed = 0;
+$YAML::XS::UseCode = 0;
 
 sub new
 {
@@ -78,6 +81,16 @@ sub _to_BibTeX
              { map { lc( $_ ) => $reference->{$_} } keys %$reference };
     }
     return @BibTeX;
+}
+
+sub to_YAML
+{
+    my( $self ) = @_;
+    my $yaml = Dump $self;
+
+    # HACK: no better way to serialize plain data?
+    $yaml =~ s/^---[^\n]*\n//m;
+    return $yaml;
 }
 
 sub validate
