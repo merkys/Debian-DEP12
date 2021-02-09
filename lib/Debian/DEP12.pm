@@ -7,6 +7,7 @@ use warnings;
 # VERSION
 
 use Data::Validate::URI qw( is_uri );
+use Encode qw( decode );
 use Scalar::Util qw( blessed );
 use Text::BibTeX::Validate qw( validate_BibTeX );
 use YAML::XS;
@@ -41,7 +42,8 @@ sub new
         for my $entry (@entries) {
             # FIXME: Filter only supported keys (?)
             push @references,
-                 { map { _canonical_BibTeX_key( $_ ) => $entry->get( $_ ) }
+                 { map { _canonical_BibTeX_key( $_ ) =>
+                         decode( 'UTF-8', $entry->get( $_ ) ) }
                        $entry->fieldlist };
 
             for ('number', 'pages', 'volume', 'year') {
