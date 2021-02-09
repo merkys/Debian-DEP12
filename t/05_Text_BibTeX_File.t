@@ -17,7 +17,7 @@ my $fh;
 open( $fh, '>', $tmp->filename );
 print $fh <<'END';
 @Article{Merkys2016,
-  author    = {Merkys, Andrius and Vaitkus, Antanas and Butkus, Justas and Okuli{\v{c}}-Kazarinas, Mykolas and Kairys, Visvaldas and Gra{\v{z}}ulis, Saulius},
+  author    = {Merkys, Andrius and Vaitkus, Antanas and Butkus, Justas and Okulič-Kazarinas, Mykolas and Kairys, Visvaldas and Gražulis, Saulius},
   journal   = {Journal of Applied Crystallography},
   title     = {{\it COD::CIF::Parser}: an error-correcting {CIF} parser for the {P}erl language},
   year      = {2016},
@@ -35,8 +35,8 @@ my $bibfile = Text::BibTeX::File->new( $tmp->filename );
 my $meta = Debian::DEP12->new( $bibfile );
 is( $meta->to_YAML, <<'END' );
 Reference:
-- Author: Merkys, Andrius and Vaitkus, Antanas and Butkus, Justas and Okuli{\v{c}}-Kazarinas,
-    Mykolas and Kairys, Visvaldas and Gra{\v{z}}ulis, Saulius
+- Author: Merkys, Andrius and Vaitkus, Antanas and Butkus, Justas and Okulič-Kazarinas,
+    Mykolas and Kairys, Visvaldas and Gražulis, Saulius
   DOI: 10.1107/S1600576715022396
   Journal: Journal of Applied Crystallography
   Month: Feb
