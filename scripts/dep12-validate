@@ -12,6 +12,16 @@ for my $i (0..$#ARGV) {
     open( my $inp, '<' . $filename );
     my $yaml = join '', <$inp>;
     close $inp;
-    my $meta = Debian::DEP12->new( $yaml );
-    $meta->validate;
+
+    eval {
+        local $SIG{__WARN__} = sub {
+            print STDERR "$0: $filename: WARNING, $_[0]";
+        };
+
+        my $meta = Debian::DEP12->new( $yaml );
+        $meta->validate;
+    };
+    if( $@ ) {
+        print STDERR "$0: $filename: ERROR, $@";
+    }
 }
