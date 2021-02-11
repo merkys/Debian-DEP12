@@ -201,6 +201,13 @@ sub validate
             }
 
             next if defined is_uri $_;
+
+            if( /^(.*)\n$/ && defined is_uri $1 ) {
+                warn sprintf '%s: URL has trailing newline character' . "\n",
+                             $key;
+                next;
+            }
+
             warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
                          $key,
                          $_;
