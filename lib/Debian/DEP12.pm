@@ -143,12 +143,22 @@ sub validate
     for my $key ('Bug-Database', 'Bug-Submit', 'Changelog',
                  'Documentation', 'Donation', 'FAQ', 'Gallery',
                  'Other-References', 'Registration', 'Repository',
-                 'Repository-Browse', 'Webservice') {
+                 'Repository-Browse', 'Screenshots', 'Webservice') {
         next if !defined $self->get( $key );
-        next if  defined is_uri $self->get( $key );
-        warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
-                     $key,
-                     $self->get( $key );
+
+        my @values;
+        if( $key eq 'Screenshots' && ref $self->get( $key ) eq 'ARRAY' ) {
+            @values = @{$self->get( $key )};
+        } else {
+            @values = ( $self->get( $key ) );
+        }
+
+        for (@values) {
+            next if defined is_uri $self->get( $key );
+            warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
+                         $key,
+                         $_;
+        }
     }
 
     for my $BibTeX ($self->_to_BibTeX) {
