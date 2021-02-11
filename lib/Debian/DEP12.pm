@@ -44,7 +44,8 @@ sub new
             push @references,
                  { map { _canonical_BibTeX_key( $_ ) =>
                          decode( 'UTF-8', $entry->get( $_ ) ) }
-                       $entry->fieldlist };
+                   grep { defined $entry->get( $_ ) }
+                        $entry->fieldlist };
 
             for ('number', 'pages', 'volume', 'year') {
                 next if !exists $references[-1]->{ucfirst $_};
