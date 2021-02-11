@@ -154,7 +154,7 @@ sub validate
         }
 
         for (@values) {
-            next if defined is_uri $self->get( $key );
+            next if defined is_uri $_;
             warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
                          $key,
                          $_;
