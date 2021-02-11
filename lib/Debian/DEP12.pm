@@ -41,6 +41,13 @@ our @fields = qw(
     Webservice
 );
 
+our @list_fields = qw(
+    Funding
+    Reference
+    Registry
+    Screenshots
+);
+
 sub new
 {
     my( $class, $what ) = @_;
@@ -165,8 +172,13 @@ sub validate
     # TODO: validate other fields
 
     for my $key (sort $self->fields) {
-        next if grep { $_ eq $key } @fields;
-        warn sprintf '%s: unknown field' . "\n", $key;
+        if( !grep { $_ eq $key } @fields ) {
+            warn sprintf '%s: unknown field' . "\n", $key;
+        }
+
+        if( ref $self->get( $key ) && !grep { $_ eq $key } @list_fields ) {
+            warn sprintf '%s: scalar value expected' . "\n", $key;
+        }
     }
 
     for my $key ('Bug-Database', 'Bug-Submit', 'Changelog',
@@ -176,7 +188,7 @@ sub validate
         next if !defined $self->get( $key );
 
         my @values;
-        if( $key eq 'Screenshots' && ref $self->get( $key ) eq 'ARRAY' ) {
+        if( ref $self->get( $key ) eq 'ARRAY' ) {
             @values = @{$self->get( $key )};
         } else {
             @values = ( $self->get( $key ) );
