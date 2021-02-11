@@ -17,6 +17,30 @@ $YAML::XS::DumpCode = 0;
 $YAML::XS::LoadBlessed = 0;
 $YAML::XS::UseCode = 0;
 
+our @fields = qw(
+    Archive
+    ASCL-Id
+    Bug-Database
+    Bug-Submit
+    Cite-As
+    Changelog
+    CPE
+    Documentation
+    Donation
+    FAQ
+    Funding
+    Gallery
+    Other-References
+    Reference
+    Registration
+    Registry
+    Repository
+    Repository-Browse
+    Screenshots
+    Security-Contact
+    Webservice
+);
+
 sub new
 {
     my( $class, $what ) = @_;
@@ -139,6 +163,11 @@ sub validate
     my( $self ) = @_;
 
     # TODO: validate other fields
+
+    for my $key (sort $self->fields) {
+        next if grep { $_ eq $key } @fields;
+        warn sprintf '%s: unknown field' . "\n", $key;
+    }
 
     for my $key ('Bug-Database', 'Bug-Submit', 'Changelog',
                  'Documentation', 'Donation', 'FAQ', 'Gallery',
