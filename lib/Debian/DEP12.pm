@@ -154,6 +154,11 @@ sub validate
         }
 
         for (@values) {
+            if( ref $_ ) {
+                warn sprintf '%s: non-scalar value' . "\n", $key;
+                next;
+            }
+
             next if defined is_uri $_;
             warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
                          $key,
