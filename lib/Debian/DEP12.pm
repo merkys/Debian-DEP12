@@ -140,10 +140,10 @@ sub validate
 
     # TODO: validate other fields
 
-    for my $key ('Bug-Database', 'Bug-Submit', 'Documentation',
-                 'Donation', 'FAQ', 'Gallery', 'Other-References',
-                 'Registration', 'Repository', 'Repository-Browse',
-                 'Webservice') {
+    for my $key ('Bug-Database', 'Bug-Submit', 'Changelog',
+                 'Documentation', 'Donation', 'FAQ', 'Gallery',
+                 'Other-References', 'Registration', 'Repository',
+                 'Repository-Browse', 'Webservice') {
         next if !defined $self->get( $key );
         next if  defined is_uri $self->get( $key );
         warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
