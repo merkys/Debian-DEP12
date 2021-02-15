@@ -8,7 +8,7 @@ use Test::More tests => 5;
 
 my $entry;
 my $warning;
-local $SIG{__WARN__} = sub { $warning = $_[0]; $warning =~ s/\n$// };
+local $SIG{__WARN__} = sub { $warning = "$_[0]"; $warning =~ s/\n$// };
 
 $entry = Debian::DEP12->new( <<END );
 Bug-Database: https://github.com/merkys/Debian-DEP12/issues
