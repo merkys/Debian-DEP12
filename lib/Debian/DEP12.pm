@@ -215,7 +215,11 @@ sub validate
     }
 
     for my $BibTeX ($self->_to_BibTeX) {
-        validate_BibTeX( $BibTeX );
+        my @warnings = validate_BibTeX( $BibTeX );
+        for (@warnings) {
+            $_->{field} = _canonical_BibTeX_key( $_->{field} );
+            warn "$_\n";
+        }
     }
 }
 

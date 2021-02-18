@@ -45,7 +45,7 @@ END
 $warning = undef;
 $entry->validate;
 
-is( $warning, 'doi: value \'search for my surname and year\' does not look like valid DOI' );
+is( $warning, 'DOI: value \'search for my surname and year\' does not look like valid DOI' );
 
 $entry = Debian::DEP12->new( <<END );
 Reference:
@@ -56,5 +56,4 @@ END
 $warning = undef;
 $entry->validate;
 
-is( $warning, 'doi: value \'search for my surname and year\' does not look like valid DOI' );
-
+is( $warning, 'DOI: value \'search for my surname and year\' does not look like valid DOI' );
