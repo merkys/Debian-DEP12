@@ -236,8 +236,6 @@ sub validate
         push @warnings, @BibTeX_warnings;
     }
 
-    use Data::Dumper; print STDERR Dumper \@warnings;
-
     return @warnings;
 }
 
