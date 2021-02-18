@@ -231,9 +231,12 @@ sub validate
         for (@BibTeX_warnings) {
             $_->{field} = _canonical_BibTeX_key( $_->{field} );
             $_->{key} = $i;
+            bless $_, Debian::DEP12::ValidationWarning::;
         }
         push @warnings, @BibTeX_warnings;
     }
+
+    use Data::Dumper; print STDERR Dumper \@warnings;
 
     return @warnings;
 }
