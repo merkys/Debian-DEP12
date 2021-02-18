@@ -249,12 +249,14 @@ sub validate
     for my $key (sort $self->fields) {
         if( !grep { $_ eq $key } @fields ) {
             push @warnings,
-                 _warn_value( 'unknown field', $self, $key );
+                 _warn_value( 'unknown field', $key, $self->get( $key ) );
         }
 
         if( ref $self->get( $key ) && !grep { $_ eq $key } @list_fields ) {
             push @warnings,
-                 _warn_value( 'scalar value expected', $self, $key );
+                 _warn_value( 'scalar value expected',
+                              $key,
+                              $self->get( $key ) );
         }
     }
 
@@ -271,10 +273,16 @@ sub validate
             @values = ( $self->get( $key ) );
         }
 
-        for (@values) {
+        for my $i (0..$#values) {
+            my $yamlpath = $key .
+                           (ref $self->get( $key ) eq 'ARRAY' ? "[$i]" : '');
+            $_ = $values[$i];
+
             if( ref $_ ) {
                 push @warnings,
-                     _warn_value( 'non-scalar value', $self, $key );
+                     _warn_value( 'non-scalar value',
+                                  $yamlpath,
+                                  $_ );
                 next;
             }
 
@@ -283,8 +291,8 @@ sub validate
             if( /^(.*)\n$/ && defined is_uri $1 ) {
                 push @warnings,
                      _warn_value( 'URL has trailing newline character',
-                                  $self,
-                                  $key,
+                                  $yamlpath,
+                                  $_,
                                   { suggestion => $1 } );
                 next;
             }
@@ -292,16 +300,16 @@ sub validate
             if( is_email_rfc822( $_ ) ) {
                 push @warnings,
                      _warn_value( 'value \'%(value)s\' is better written as \'%(suggestion)s\'',
-                                  $self,
-                                  $key,
+                                  $yamlpath,
+                                  $_,
                                   { suggestion => 'mailto:' . $_ } );
                 next;
             }
 
             push @warnings,
                  _warn_value( 'value \'%(value)s\' does not look like valid URL',
-                              $self,
-                              $key );
+                              $yamlpath,
+                              $_ );
         }
     }
 
@@ -326,12 +334,12 @@ sub validate
 
 sub _warn_value
 {
-    my( $message, $entry, $field, $extra ) = @_;
+    my( $message, $field, $value, $extra ) = @_;
     $extra = {} unless $extra;
     return Debian::DEP12::ValidationWarning->new(
             $message,
             { field => $field,
-              value => $entry->get( $field ),
+              value => $value,
               %$extra } );
 }
 
