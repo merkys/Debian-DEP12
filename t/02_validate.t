@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Debian::DEP12;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 my $entry;
 my $warning;
@@ -47,3 +47,7 @@ END
 
 @warnings = $entry->validate;
 is( "@warnings", '1: DOI: value \'search for my surname and year\' does not look like valid DOI' );
+
+$entry = Debian::DEP12->new( { 'Bug-Submit' => 'merkys@cpan.org' } );
+@warnings = $entry->validate;
+is( "@warnings", 'Bug-Submit: value \'merkys@cpan.org\' is better written as \'mailto:merkys@cpan.org\'' );

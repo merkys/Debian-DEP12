@@ -6,6 +6,7 @@ use warnings;
 # ABSTRACT: interface to Debian DEP 12 format
 # VERSION
 
+use Data::Validate::Email qw( is_email_rfc822 );
 use Data::Validate::URI qw( is_uri );
 use Debian::DEP12::ValidationWarning;
 use Encode qw( decode );
@@ -285,6 +286,15 @@ sub validate
                                   $self,
                                   $key,
                                   { suggestion => $1 } );
+                next;
+            }
+
+            if( is_email_rfc822( $_ ) ) {
+                push @warnings,
+                     _warn_value( 'value \'%(value)s\' is better written as \'%(suggestion)s\'',
+                                  $self,
+                                  $key,
+                                  { suggestion => 'mailto:' . $_ } );
                 next;
             }
 
