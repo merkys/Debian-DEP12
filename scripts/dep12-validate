@@ -17,7 +17,7 @@ for my $i (0..$#ARGV) {
     my @warnings = $meta->validate;
 
     for my $warning (@warnings) {
-        $warning->set( 'file', $filename' );
+        $warning->set( 'file', $filename );
         warn "$0: $warning\n";
     }
 }
