@@ -310,8 +310,12 @@ sub validate
         my $BibTeX = $BibTeX[$i];
         my @BibTeX_warnings = validate_BibTeX( $BibTeX );
         for (@BibTeX_warnings) {
-            $_->set( 'field', _canonical_BibTeX_key( $_->get( 'field' ) ) );
-            $_->set( 'key', $i );
+            # For everything under Reference outputting YAML paths like
+            # https://github.com/wwkimball/yamlpath/wiki/Segments-of-a-YAML-Path
+            $_->set( 'field',
+                     "Reference" .
+                     (ref $self->get( 'Reference' ) eq 'ARRAY' ? "[$i]" : '') . '.' .
+                     _canonical_BibTeX_key( $_->get( 'field' ) ) );
             bless $_, Debian::DEP12::ValidationWarning::;
         }
         push @warnings, @BibTeX_warnings;

@@ -37,7 +37,7 @@ Reference:
 END
 
 @warnings = $entry->validate;
-is( "@warnings", '0: DOI: value \'search for my surname and year\' does not look like valid DOI' );
+is( "@warnings", 'Reference.DOI: value \'search for my surname and year\' does not look like valid DOI' );
 
 $entry = Debian::DEP12->new( <<END );
 Reference:
@@ -46,7 +46,7 @@ Reference:
 END
 
 @warnings = $entry->validate;
-is( "@warnings", '1: DOI: value \'search for my surname and year\' does not look like valid DOI' );
+is( "@warnings", 'Reference[1].DOI: value \'search for my surname and year\' does not look like valid DOI' );
 
 $entry = Debian::DEP12->new( { 'Bug-Submit' => 'merkys@cpan.org' } );
 @warnings = $entry->validate;
