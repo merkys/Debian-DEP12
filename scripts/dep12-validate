@@ -13,15 +13,11 @@ for my $i (0..$#ARGV) {
     my $yaml = join '', <$inp>;
     close $inp;
 
-    eval {
-        local $SIG{__WARN__} = sub {
-            print STDERR "$0: $filename: WARNING, $_[0]";
-        };
+    my $meta = Debian::DEP12->new( $yaml );
+    my @warnings = $meta->validate;
 
-        my $meta = Debian::DEP12->new( $yaml );
-        $meta->validate;
-    };
-    if( $@ ) {
-        print STDERR "$0: $filename: ERROR, $@";
+    for my $warning (@warnings) {
+        $warning->set( 'file', $filename' );
+        warn "$0: $warning\n";
     }
 }
