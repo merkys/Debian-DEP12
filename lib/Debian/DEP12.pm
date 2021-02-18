@@ -17,7 +17,7 @@ $YAML::XS::DumpCode = 0;
 $YAML::XS::LoadBlessed = 0;
 $YAML::XS::UseCode = 0;
 
-our @fields = qw(
+my @fields = qw(
     Archive
     ASCL-Id
     Bug-Database
@@ -41,7 +41,7 @@ our @fields = qw(
     Webservice
 );
 
-our @list_fields = qw(
+my @list_fields = qw(
     Funding
     Reference
     Registry
