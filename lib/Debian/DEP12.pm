@@ -229,8 +229,8 @@ sub validate
         my $BibTeX = $BibTeX[$i];
         my @BibTeX_warnings = validate_BibTeX( $BibTeX );
         for (@BibTeX_warnings) {
-            $_->{field} = _canonical_BibTeX_key( $_->{field} );
-            $_->{key} = $i;
+            $_->set( 'field', _canonical_BibTeX_key( $_->get( 'field' ) ) );
+            $_->set( 'key', $i );
             bless $_, Debian::DEP12::ValidationWarning::;
         }
         push @warnings, @BibTeX_warnings;
