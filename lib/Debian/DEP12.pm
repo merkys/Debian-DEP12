@@ -49,6 +49,39 @@ my @list_fields = qw(
     Screenshots
 );
 
+=head1 NAME
+
+Debian::DEP12 - interface to Debian DEP 12 format
+
+=head1 SYNOPSIS
+
+    use Debian::DEP12;
+
+    my $meta = Debian::DEP12->new;
+    $meta->set( 'Bug-Database',
+                'https://github.com/merkys/Debian-DEP12/issues' );
+
+    $meta->validate;
+
+=head1 DESCRIPTION
+
+Debian::DEP12 is an object-oriented interface for Debian DEP 12 format,
+also known as debian/upstream/metadata. Primary focus of the initial
+development was validation and fixing of DEP 12 data.
+
+Contributions welcome!
+
+=head1 METHODS
+
+=head2 new( $what )
+
+Creates a new Debian::DEP12 instance from either YAML,
+L<Text::BibTeX::Entry|Text::BibTeX::Entry> or
+L<Text::BibTeX::File|Text::BibTeX::File> instances, or plain Perl hash
+reference with DEP 12 fields and their values.
+
+=cut
+
 sub new
 {
     my( $class, $what ) = @_;
@@ -111,10 +144,22 @@ sub _canonical_BibTeX_key
     return ucfirst $key;
 }
 
+=head2 fields()
+
+Returns an array of fields defined in the instance in any order.
+
+=cut
+
 sub fields
 {
     return keys %{$_[0]};
 }
+
+=head2 get( $field )
+
+Returns value of a field.
+
+=cut
 
 sub get
 {
@@ -122,12 +167,24 @@ sub get
     return $self->{$field};
 }
 
+=head2 set( $field, $value )
+
+Sets a new value for a field. Returns the old value.
+
+=cut
+
 sub set
 {
     my( $self, $field, $value ) = @_;
     ( my $old_value, $self->{$field} ) = ( $self->{$field}, $value );
     return $old_value;
 }
+
+=head2 delete( $field )
+
+Unsets value for a field. Returns the old value.
+
+=cut
 
 sub delete
 {
@@ -156,6 +213,12 @@ sub _to_BibTeX
     return @BibTeX;
 }
 
+=head2 to_YAML()
+
+Returns a string with YAML representation.
+
+=cut
+
 sub to_YAML
 {
     my( $self ) = @_;
@@ -165,6 +228,14 @@ sub to_YAML
     $yaml =~ s/^---[^\n]*\n//m;
     return $yaml;
 }
+
+=head2 validate()
+
+Performs checks of DEP 12 data in the instance and returns an array of
+validation messages as instances of
+L<Debian::DEP12::ValidationWarning|Debian::DEP12::ValidationWarning>.
+
+=cut
 
 sub validate
 {
@@ -250,30 +321,6 @@ sub _warn_value
               %$extra } );
 }
 
-1;
-
-__END__
-
-=pod
-
-=head1 NAME
-
-Debian::DEP12 - interface to Debian DEP 12 format
-
-=head1 SYNOPSIS
-
-    use Debian::DEP12;
-
-    my $meta = Debian::DEP12->new;
-    $meta->set( 'Bug-Database',
-                'https://github.com/merkys/Debian-DEP12/issues' );
-
-    $meta->validate;
-
-=head1 DESCRIPTION
-
-TODO
-
 =head1 SEE ALSO
 
 For the description of DEP12 refer to
@@ -284,3 +331,5 @@ L<https://dep-team.pages.debian.net/deps/dep12/>.
 Andrius Merkys, E<lt>merkys@cpan.orgE<gt>
 
 =cut
+
+1;
