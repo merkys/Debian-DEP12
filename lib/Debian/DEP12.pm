@@ -323,7 +323,7 @@ sub _warn_value
 
 =head1 SEE ALSO
 
-For the description of DEP12 refer to
+For the description of DEP 12 refer to
 L<https://dep-team.pages.debian.net/deps/dep12/>.
 
 =head1 AUTHORS
