@@ -7,6 +7,7 @@ use warnings;
 # VERSION
 
 use Data::Validate::URI qw( is_uri );
+use Debian::DEP12::ValidationWarning;
 use Encode qw( decode );
 use Scalar::Util qw( blessed );
 use Text::BibTeX::Validate qw( validate_BibTeX );
@@ -169,15 +170,19 @@ sub validate
 {
     my( $self ) = @_;
 
+    my @warnings;
+
     # TODO: validate other fields
 
     for my $key (sort $self->fields) {
         if( !grep { $_ eq $key } @fields ) {
-            warn sprintf '%s: unknown field' . "\n", $key;
+            push @warnings,
+                 _warn_value( 'unknown field', $self, $key );
         }
 
         if( ref $self->get( $key ) && !grep { $_ eq $key } @list_fields ) {
-            warn sprintf '%s: scalar value expected' . "\n", $key;
+            push @warnings,
+                 _warn_value( 'scalar value expected', $self, $key );
         }
     }
 
@@ -196,31 +201,52 @@ sub validate
 
         for (@values) {
             if( ref $_ ) {
-                warn sprintf '%s: non-scalar value' . "\n", $key;
+                push @warnings,
+                     _warn_value( 'non-scalar value', $self, $key );
                 next;
             }
 
             next if defined is_uri $_;
 
             if( /^(.*)\n$/ && defined is_uri $1 ) {
-                warn sprintf '%s: URL has trailing newline character' . "\n",
-                             $key;
+                push @warnings,
+                     _warn_value( 'URL has trailing newline character',
+                                  $self,
+                                  $key,
+                                  { suggestion => $1 } );
                 next;
             }
 
-            warn sprintf '%s: value \'%s\' does not look like valid URL' . "\n",
-                         $key,
-                         $_;
+            push @warnings,
+                 _warn_value( 'value \'%(value)s\' does not look like valid URL',
+                              $self,
+                              $key );
         }
     }
 
-    for my $BibTeX ($self->_to_BibTeX) {
-        my @warnings = validate_BibTeX( $BibTeX );
-        for (@warnings) {
+    my @BibTeX = $self->_to_BibTeX;
+    for my $i (0..$#BibTeX) {
+        my $BibTeX = $BibTeX[$i];
+        my @BibTeX_warnings = validate_BibTeX( $BibTeX );
+        for (@BibTeX_warnings) {
             $_->{field} = _canonical_BibTeX_key( $_->{field} );
-            warn "$_\n";
+            $_->{key} = $i;
         }
+        push @warnings, @BibTeX_warnings;
     }
+
+    return @warnings;
+}
+
+sub _warn_value
+{
+    my( $message, $entry, $field, $extra ) = @_;
+    $extra = {} unless $extra;
+    return Debian::DEP12::ValidationWarning->new(
+            $message,
+            { field => $field,
+              value => $entry->get( $field ),
+              %$extra } );
 }
 
 1;

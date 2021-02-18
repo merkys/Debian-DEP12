@@ -8,44 +8,36 @@ use Test::More tests => 5;
 
 my $entry;
 my $warning;
-local $SIG{__WARN__} = sub { $warning = "$_[0]"; $warning =~ s/\n$// };
+my @warnings;
 
 $entry = Debian::DEP12->new( <<END );
 Bug-Database: https://github.com/merkys/Debian-DEP12/issues
 Bug-Submit: https://github.com/merkys/Debian-DEP12/issues
 END
 
-$warning = undef;
-$entry->validate;
-
-is( $warning, undef );
+@warnings = $entry->validate;
+is( scalar @warnings, 0 );
 
 $entry = Debian::DEP12->new( <<END );
 Bug-Database: github.com/merkys/Debian-DEP12/issues
 END
 
-$warning = undef;
-$entry->validate;
-
-is( $warning, 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' does not look like valid URL' );
+@warnings = $entry->validate;
+is( "@warnings", 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' does not look like valid URL' );
 
 $entry = Debian::DEP12->new;
 $entry->set( 'Bug-Database', 'github.com/merkys/Debian-DEP12/issues' );
 
-$warning = undef;
-$entry->validate;
-
-is( $warning, 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' does not look like valid URL' );
+@warnings = $entry->validate;
+is( "@warnings", 'Bug-Database: value \'github.com/merkys/Debian-DEP12/issues\' does not look like valid URL' );
 
 $entry = Debian::DEP12->new( <<END );
 Reference:
   DOI: search for my surname and year
 END
 
-$warning = undef;
-$entry->validate;
-
-is( $warning, 'DOI: value \'search for my surname and year\' does not look like valid DOI' );
+@warnings = $entry->validate;
+is( "@warnings", '0: DOI: value \'search for my surname and year\' does not look like valid DOI' );
 
 $entry = Debian::DEP12->new( <<END );
 Reference:
@@ -53,7 +45,5 @@ Reference:
  - DOI: search for my surname and year
 END
 
-$warning = undef;
-$entry->validate;
-
-is( $warning, 'DOI: value \'search for my surname and year\' does not look like valid DOI' );
+@warnings = $entry->validate;
+is( "@warnings", '1: DOI: value \'search for my surname and year\' does not look like valid DOI' );
