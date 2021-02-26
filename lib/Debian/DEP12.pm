@@ -325,6 +325,31 @@ sub validate
         }
     }
 
+    if( defined $self->get( 'Registry' ) &&
+        ref $self->get( 'Registry' ) eq 'ARRAY' ) {
+        # TODO: report non-arrays
+
+        my @registry = @{$self->get( 'Registry' )};
+        for my $i (0..$#registry) {
+            my @unknown_fields = grep { $_ !~ /^(Name|Entry)$/ }
+                                      sort keys %{$registry[$i]};
+            for (@unknown_fields) {
+                push @warnings,
+                     _warn_value( 'unknown field',
+                                  "Registry[$i].$_",
+                                  $registry[$i]->{$_} );
+            }
+
+            for ('Name', 'Entry') {
+                if( !exists $registry[$i]->{$_} ) {
+                    push @warnings,
+                         _warn_value( 'missing mandatory field',
+                                      "Registry[$i].$_" );
+                }
+            }
+        }
+    }
+
     my @BibTeX = $self->_to_BibTeX;
     for my $i (0..$#BibTeX) {
         my $BibTeX = $BibTeX[$i];
