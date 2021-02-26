@@ -50,6 +50,13 @@ my @list_fields = qw(
     Screenshots
 );
 
+my @reserved_fields = qw(
+    ping
+    YAML-ALL
+    YAML-URL
+    YAML-REFRESH-DATE
+);
+
 =head1 NAME
 
 Debian::DEP12 - interface to Debian DEP 12 format
@@ -250,6 +257,11 @@ sub validate
         if( !grep { $_ eq $key } @fields ) {
             push @warnings,
                  _warn_value( 'unknown field', $key, $self->get( $key ) );
+        }
+
+        if( grep { $_ eq $key } @reserved_fields ) {
+            push @warnings,
+                 _warn_value( 'reserved field', $key, $self->get( $key ) );
         }
 
         if( ref $self->get( $key ) && !grep { $_ eq $key } @list_fields ) {
