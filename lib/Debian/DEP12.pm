@@ -345,6 +345,30 @@ sub validate
                     push @warnings,
                          _warn_value( 'missing mandatory field',
                                       "Registry[$i].$_" );
+                    next;
+                }
+
+                if( !defined $registry[$i]->{$_} ) {
+                    push @warnings,
+                         _warn_value( 'undefined value',
+                                      "Registry[$i].$_" );
+                    next;
+                }
+
+                if( ref $registry[$i]->{$_} ) {
+                    push @warnings,
+                         _warn_value( 'non-scalar value',
+                                      "Registry[$i].$_",
+                                      $registry[$i]->{$_} );
+                    next;
+                }
+
+                if( defined is_uri $registry[$i]->{$_} ) {
+                    push @warnings,
+                         _warn_value( 'should not be URI',
+                                      "Registry[$i].$_",
+                                      $registry[$i]->{$_} );
+                    next;
                 }
             }
         }
