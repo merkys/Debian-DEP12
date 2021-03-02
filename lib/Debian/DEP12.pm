@@ -276,7 +276,12 @@ sub validate
                  'Documentation', 'Donation', 'FAQ', 'Gallery',
                  'Other-References', 'Registration', 'Repository',
                  'Repository-Browse', 'Screenshots', 'Webservice') {
-        next if !defined $self->get( $key );
+        next if !exists $self->{$key};
+
+        if( !defined $self->get( $key ) ) {
+            push @warnings, _warn_value( 'undefined value', $key );
+            next;
+        }
 
         my @values;
         if( ref $self->get( $key ) eq 'ARRAY' ) {
