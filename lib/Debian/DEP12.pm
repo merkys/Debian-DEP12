@@ -6,6 +6,9 @@ use warnings;
 # ABSTRACT: interface to Debian DEP 12 format
 # VERSION
 
+# As DEP 12 is in draft state and the development is happening in its
+# wiki page (https://wiki.debian.org/UpstreamMetadata), this variable
+# holds the UTC timestamp of DEP 12 wiki page.
 our $DEP12_VERSION = '2021-02-21 11:52:54';
 
 use Data::Validate::Email qw( is_email_rfc822 );
@@ -77,7 +80,13 @@ Debian::DEP12 - interface to Debian DEP 12 format
 
 Debian::DEP12 is an object-oriented interface for Debian DEP 12 format,
 also known as debian/upstream/metadata. Primary focus of the initial
-development was validation and fixing of DEP 12 data.
+development is the validation and fixing of DEP 12 data.
+
+DEP 12 is in draft state and the development is happening in its wiki
+page (L<https://wiki.debian.org/UpstreamMetadata>). Thus Debian::DEP12
+attempts to keep up with the DEP 12 specification. To keep track, the
+UTC timestamp of DEP 12 wiki page is stored in C<$DEP12_VERSION> class
+variable.
 
 Contributions welcome!
 
