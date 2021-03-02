@@ -6,6 +6,8 @@ use warnings;
 # ABSTRACT: interface to Debian DEP 12 format
 # VERSION
 
+our $DEP12_VERSION = '2021-02-21 11:52:54';
+
 use Data::Validate::Email qw( is_email_rfc822 );
 use Data::Validate::URI qw( is_uri );
 use Debian::DEP12::ValidationWarning;
