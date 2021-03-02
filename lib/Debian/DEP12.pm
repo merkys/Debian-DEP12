@@ -372,7 +372,7 @@ sub validate
                     if( $registry[$i]->{$_} !~
                         /^(bio\.tools|biii|OMICtools|SciCrunch|conda:.+|opam|PyPI)$/ ) {
                         push @warnings,
-                             _warn_value( 'unknown registry \'%(value)\'',
+                             _warn_value( 'unknown registry \'%(value)s\'',
                                           "Registry[$i].$_",
                                           $registry[$i]->{$_} );
                     }
