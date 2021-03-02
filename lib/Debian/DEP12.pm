@@ -368,12 +368,21 @@ sub validate
                     next;
                 }
 
-                if( defined is_uri $registry[$i]->{$_} ) {
-                    push @warnings,
-                         _warn_value( 'should not be URI',
-                                      "Registry[$i].$_",
-                                      $registry[$i]->{$_} );
-                    next;
+                if( $_ eq 'Name' ) {
+                    if( $registry[$i]->{$_} !~
+                        /^(bio\.tools|biii|OMICtools|SciCrunch|conda:.+|opam|PyPI)$/ ) {
+                        push @warnings,
+                             _warn_value( 'unknown registry \'%(value)\'',
+                                          "Registry[$i].$_",
+                                          $registry[$i]->{$_} );
+                    }
+                } else { # Entry
+                    if( defined is_uri $registry[$i]->{$_} ) {
+                        push @warnings,
+                             _warn_value( 'should not be URI',
+                                          "Registry[$i].$_",
+                                          $registry[$i]->{$_} );
+                    }
                 }
             }
         }
