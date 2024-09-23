@@ -18,6 +18,7 @@ use Encode qw( decode );
 use Scalar::Util qw( blessed );
 use Text::BibTeX::Validate qw( validate_BibTeX );
 use YAML::XS;
+use version;
 
 # Preventing YAML::XS from doing undesired things:
 $YAML::XS::DumpCode = 0;
@@ -142,7 +143,7 @@ sub new
         return $class->new( { Reference => \@references } );
     } elsif( ref $what eq '' ) {
         # Text in YAML format
-        if( $YAML::XS::VERSION < 0.69 ) {
+        if( version->parse($YAML::XS::VERSION) < version->parse('0.69') ) {
             die 'YAML::XS < 0.69 is insecure' . "\n";
         }
 
